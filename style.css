@@ -220,7 +220,6 @@ body{
 }
 
 .audio-container {
-
   position: absolute;
   inset: 0;
 
@@ -228,15 +227,16 @@ body{
   justify-content: center;
   align-items: center;
 
-  opacity: 0;
-
+  opacity: 0;             
   transition: opacity 1s ease;
 
-  z-index: 1;
+  z-index: 1;             
+  pointer-events: auto;    
 }
 
 .audio-container audio {
   width: 300px;
+  max-width: 80%;
 }
 
 #tv-background{
