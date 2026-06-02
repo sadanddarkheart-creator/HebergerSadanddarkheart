@@ -227,15 +227,20 @@ body{
   justify-content: center;
   align-items: center;
 
-  opacity: 0;             
-  transition: opacity 1s ease;
+  opacity: 1;
 
-  z-index: 5;               
+  padding: 20px 0;   /* IMPORTANT : empêche le clipping */
+  overflow: visible; /* IMPORTANT */
+
+  z-index: 5;
 }
 
 .audio-container audio {
-  width: 300px;
-  max-width: 80%;
+  width: 90%;
+  max-width: 320px;
+
+  height: auto;      /* IMPORTANT */
+  display: block;
 }
 
 #tv-background{
