@@ -220,14 +220,23 @@ body{
 }
 
 .audio-container {
-  display: none; 
+
+  position: absolute;
+  inset: 0;
+
+  display: none;
+
   justify-content: center;
-  margin-top: 20px;
+  align-items: center;
+
+  z-index: 1;
 }
 
 .audio-container audio {
+
   width: 90%;
   max-width: 320px;
+
   display: block;
 }
 
