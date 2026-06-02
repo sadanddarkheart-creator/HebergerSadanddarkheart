@@ -1,0 +1,255 @@
+@import url('https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap');
+
+body{
+  margin:0;
+  font-family: 'Merienda', serif;
+  line-height:1.8;
+  
+   background:#4CA889;
+}
+
+.text-section{
+  max-width:800px;
+  margin:auto;
+  padding:120px 20px;
+}
+
+.interactive-section{
+  min-height:100vh;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  padding:100px 0;
+}
+
+/* ===================== */
+/* CHAMBRE */
+/* ===================== */
+
+.scene{
+  position:relative;
+  display:inline-block;
+}
+
+.background{
+  width:95%;
+  display:block;
+}
+
+.toy{
+  position:absolute;
+
+  left:55%;
+  top:70%;
+
+  width:80px;
+  cursor:pointer;
+}
+
+@keyframes bounce{
+
+  0%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.15);
+  }
+
+  100%{
+    transform:scale(1);
+  }
+
+}
+
+.toy.bounce{
+  animation:bounce 0.4s ease;
+}
+
+#secret{
+
+  position:absolute;
+
+  left:50%;
+  top:50%;
+
+  transform:translate(-50%, -50%);
+
+  background:white;
+  padding:15px 20px;
+
+  border-radius:12px;
+
+  box-shadow:0 8px 15px rgba(0,0,0,0.2);
+
+  opacity:0;
+
+  transition:opacity .5s ease;
+
+  z-index:10;
+}
+
+/* ===================== */
+/* TV */
+/* ===================== */
+
+.tv{
+  position:relative;
+  width:500px;
+}
+
+#screen-black,
+#memory-video,
+#static{
+
+  position:absolute;
+
+  left:12%;
+  top:22%;
+
+  width:75%;
+  height:53%;
+}
+
+#screen-black{
+  background:black;
+  opacity:1;
+  z-index:1;
+}
+
+#memory-video{
+  z-index:2;
+
+  opacity:0;
+
+  transition:opacity 1s ease;
+
+  object-fit:cover;
+}
+
+#static{
+  z-index:3;
+
+  opacity:0;
+
+  transition:opacity .2s ease;
+
+  pointer-events:none;
+}
+
+#tv-frame{
+  width:100%;
+  display:block;
+  position:relative;
+  z-index:4;
+}
+
+/* ===================== */
+/* CASSETTE */
+/* ===================== */
+
+.container {
+  perspective: 1000px;
+}
+
+.cassette-scene {
+  position: relative;
+  width: 350px;
+  height: 250px;
+}
+
+.cassette {
+
+  width: 100%;
+  height: 100%;
+
+  position: relative;
+
+  transform-style: preserve-3d;
+
+  transition:
+    transform 0.8s ease,
+    opacity 0.8s ease;
+
+  cursor: pointer;
+
+  z-index: 3;
+}
+
+.front,
+.back {
+
+  position: absolute;
+  inset: 0;
+
+  backface-visibility: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.front img,
+.back img {
+
+  width: 220px;
+
+  filter:
+    drop-shadow(
+      0 8px 10px rgba(0,0,0,0.25)
+    );
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+.cassette.flipped {
+  transform: rotateY(180deg);
+}
+
+.cassette.exit-up {
+
+  transform:
+    translateY(-200px)
+    rotateY(180deg);
+
+  opacity: 0;
+}
+
+.audio-container {
+
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+
+  transition: opacity 1s ease;
+
+  z-index: 1;
+}
+
+.audio-container audio {
+  width: 300px;
+}
+
+#tv-background{
+
+  position:absolute;
+
+  left:12%;
+  top:22%;
+
+  width:75%;
+  height:53%;
+
+  background:black;
+
+  z-index:0;
+}
