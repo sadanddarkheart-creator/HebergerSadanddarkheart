@@ -144,7 +144,7 @@ if (
 
       setTimeout(() => {
 
-        audioContainer.style.opacity = "1";
+        audioContainer.style.display = "flex";
 
         audio.play().catch(err => {
           console.log(

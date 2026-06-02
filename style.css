@@ -220,26 +220,14 @@ body{
 }
 
 .audio-container {
-  position: relative;
-  width: 100%;
-
-  display: flex;
+  display: none; 
   justify-content: center;
-  align-items: center;
-
-  opacity: 1;
-
-  padding: 20px 0;   /* IMPORTANT : empêche le clipping */
-  overflow: visible; /* IMPORTANT */
-
-  z-index: 5;
+  margin-top: 20px;
 }
 
 .audio-container audio {
   width: 90%;
   max-width: 320px;
-
-  height: auto;      /* IMPORTANT */
   display: block;
 }
 
