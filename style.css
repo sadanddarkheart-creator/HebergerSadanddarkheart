@@ -220,8 +220,8 @@ body{
 }
 
 .audio-container {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  width: 100%;
 
   display: flex;
   justify-content: center;
@@ -230,8 +230,7 @@ body{
   opacity: 0;             
   transition: opacity 1s ease;
 
-  z-index: 1;             
-  pointer-events: auto;    
+  z-index: 5;               
 }
 
 .audio-container audio {
