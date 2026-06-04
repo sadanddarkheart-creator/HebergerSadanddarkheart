@@ -68,7 +68,7 @@ function checkTutorialComplete() {
 const cassettePlayer = document.getElementById("CassettePlayer");
 const cassette = document.getElementById("cassette");
 
-const audio = new Audio("https://github.com/sadanddarkheart-creator/HebergerSadanddarkheart/raw/refs/heads/main/Popee%20The%20Performer%20OST%20-%20Tahmano.mp3");
+const audio = new Audio("https://github.com/sadanddarkheart-creator/HebergerSadanddarkheart/raw/refs/heads/main/Bravo%20Bravo%20-%20Sound%20Effect.mp3");
 
 cassettePlayer.addEventListener("click", () => {
 
