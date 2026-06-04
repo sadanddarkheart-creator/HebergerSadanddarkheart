@@ -15,23 +15,21 @@ let tutorialDone = false;
 
 const nextPage = document.getElementById("next-page");
 
-/* sécurité si élément absent */
-if (nextPage) {
+function updateNextPage() {
+  if (!nextPage) return;
 
-  function updateNextPage() {
-
-    /* IMPORTANT :
-       on NE dépend PLUS du scroll sur mobile,
-       sinon la flèche disparaît si pas assez de hauteur
-    */
-
-    if (!tutorialDone) {
-      nextPage.style.opacity = 0;
-      return;
-    }
-
-    nextPage.style.opacity = 1;
+  // simple logique fiable (pas dépendante du scroll mobile)
+  if (!tutorialDone) {
+    nextPage.style.opacity = 0;
+    nextPage.style.pointerEvents = "none";
+    return;
   }
+
+  nextPage.style.opacity = 1;
+  nextPage.style.pointerEvents = "auto";
+}
+
+if (nextPage) {
 
   window.addEventListener("scroll", updateNextPage);
   window.addEventListener("touchmove", updateNextPage);
@@ -51,13 +49,13 @@ if (nextPage) {
 }
 
 /* ===================== */
-/* CHECK TUTORIAL */
+/* CHECK COMPLETION */
 /* ===================== */
 
 function checkTutorialComplete() {
   if (cassetteDone && tvDone && ticketDone) {
     tutorialDone = true;
-    updateNextPage(); // 🔥 force affichage immédiat
+    updateNextPage();
   }
 }
 
@@ -111,37 +109,29 @@ const video = document.getElementById("tv-video");
 
 tv.addEventListener("click", () => {
 
-  // bloque si déjà fait OU si une autre animation tourne
   if (tvDone || isBusy) return;
 
   isBusy = true;
   tvDone = true;
 
-  // cache TV clickable
   tv.style.opacity = "0";
   tv.style.pointerEvents = "none";
 
   setTimeout(() => {
 
     tv.style.display = "none";
-
     wrapper.classList.add("active");
 
     requestAnimationFrame(() => {
       video.currentTime = 0;
 
-      const playPromise = video.play();
-
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          setTimeout(() => video.play().catch(()=>{}), 200);
-        });
-      }
+      video.play().catch(() => {
+        setTimeout(() => video.play().catch(()=>{}), 200);
+      });
     });
 
   }, 300);
 });
-
 
 video.addEventListener("ended", () => {
 
@@ -157,10 +147,9 @@ video.addEventListener("ended", () => {
   }, 500);
 });
 
-
 video.addEventListener("error", () => {
-  console.log("TV ERROR: vidéo impossible à lire");
-  isBusy = false; // 🔥 important pour éviter blocage total
+  console.log("TV ERROR");
+  isBusy = false;
 });
 
 /* ===================== */
@@ -213,7 +202,7 @@ ticket.addEventListener("click", () => {
   ticket.style.pointerEvents = "none";
 });
 
-/* scratch helper */
+/* scratch helpers */
 
 function getPos(e) {
   const rect = canvas.getBoundingClientRect();
@@ -251,7 +240,7 @@ function drawScratch(e) {
   const pos = getPos(e);
 
   ctx.globalCompositeOperation = "destination-out";
-  ctx.lineWidth = 30;
+  ctx.lineWidth = 45;
   ctx.lineCap = "round";
 
   ctx.beginPath();
@@ -278,7 +267,7 @@ function drawScratch(e) {
 
       const percent = (transparent / total) * 100;
 
-      if (percent > 55) finishScratch();
+      if (percent > 45) finishScratch();
 
       checkCooldown = false;
 
