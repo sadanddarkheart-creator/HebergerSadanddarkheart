@@ -1,8 +1,30 @@
 /* ===================== */
-/* LOCK GLOBAL */
+/* GLOBAL STATE */
 /* ===================== */
 
 let isBusy = false;
+
+let cassetteDone = false;
+let tvDone = false;
+let ticketDone = false;
+let tutorialDone = false;
+
+/* ===================== */
+/* ELEMENTS PAGE NEXT */
+/* ===================== */
+
+const nextPage = document.getElementById("next-page");
+
+/* ===================== */
+/* CHECK GLOBAL COMPLETION */
+/* ===================== */
+
+function checkTutorialComplete() {
+  if (cassetteDone && tvDone && ticketDone) {
+    tutorialDone = true;
+    nextPage.style.opacity = "1";
+  }
+}
 
 /* ===================== */
 /* CASSETTE */
@@ -15,42 +37,34 @@ const audio = new Audio("https://github.com/sadanddarkheart-creator/HebergerSada
 
 cassettePlayer.addEventListener("click", () => {
 
-  if (cassette.dataset.done || isBusy) return;
+  if (cassetteDone || isBusy) return;
 
   isBusy = true;
-  cassette.dataset.done = "true";
+  cassetteDone = true;
 
   cassette.classList.add("active");
 
-  setTimeout(() => {
-    cassette.classList.add("flipped");
-  }, 600);
-
-  setTimeout(() => {
-    cassette.classList.add("exit-up");
-  }, 1400);
+  setTimeout(() => cassette.classList.add("flipped"), 600);
+  setTimeout(() => cassette.classList.add("exit-up"), 1400);
 
   setTimeout(() => {
     audio.currentTime = 0;
     audio.play().catch(() => {});
   }, 2200);
 
+  cassettePlayer.style.opacity = "0";
   cassettePlayer.style.pointerEvents = "none";
- cassettePlayer.style.opacity = "0";
-cassettePlayer.style.pointerEvents = "none";
-cassettePlayer.style.transform = "scale(0.95)";
 
-  // 🔓 libération fiable = AUDIO FINI UNIQUEMENT
   audio.onended = () => {
     isBusy = false;
+    checkTutorialComplete();
   };
 
-  // sécurité fallback (si autoplay bloqué ou bug navigateur)
   setTimeout(() => {
     isBusy = false;
+    checkTutorialComplete();
   }, 5000);
 });
-
 
 /* ===================== */
 /* TV */
@@ -60,8 +74,6 @@ const tv = document.getElementById("TV");
 const wrapper = document.querySelector(".tv-wrapper");
 const video = document.getElementById("tv-video");
 
-let tvDone = false;
-
 tv.addEventListener("click", () => {
 
   if (tvDone || isBusy) return;
@@ -69,33 +81,20 @@ tv.addEventListener("click", () => {
   isBusy = true;
   tvDone = true;
 
-  // cacher TV cliquable immédiatement
   tv.style.opacity = "0";
   tv.style.pointerEvents = "none";
 
   setTimeout(() => {
-    tv.style.display = "none";
 
-    // IMPORTANT : attendre que le DOM ait bien switch avant play
+    tv.style.display = "none";
     wrapper.classList.add("active");
 
-    requestAnimationFrame(() => {
-      video.currentTime = 0;
-
-      const playPromise = video.play();
-
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // si blocage autoplay → retry léger
-          setTimeout(() => video.play().catch(()=>{}), 200);
-        });
-      }
-    });
+    video.currentTime = 0;
+    video.play().catch(() => {});
 
   }, 300);
 });
 
-
 video.addEventListener("ended", () => {
 
   wrapper.style.opacity = "0";
@@ -103,30 +102,15 @@ video.addEventListener("ended", () => {
   setTimeout(() => {
     wrapper.classList.remove("active");
     wrapper.style.display = "none";
+
     isBusy = false;
+    checkTutorialComplete();
+
   }, 500);
-
-});
-
-video.addEventListener("error", () => {
-  console.log("❌ VIDEO ERROR - lien cassé ou incompatible");
-});
-
-video.addEventListener("ended", () => {
-
-  wrapper.style.opacity = "0";
-
-  setTimeout(() => {
-    wrapper.classList.remove("active");
-    wrapper.style.display = "none";
-
-    isBusy = false; // libère enfin le système
-  }, 500);
-
 });
 
 /* ===================== */
-/* TICKET */
+/* SCRATCH CARD */
 /* ===================== */
 
 const ticket = document.getElementById("ticket");
@@ -143,10 +127,6 @@ function exitFocus() {
   document.body.classList.remove("focus");
 }
 
-/* ===================== */
-/* resize canvas */
-/* ===================== */
-
 function resizeScratch() {
   const rect = canvas.getBoundingClientRect();
 
@@ -158,49 +138,32 @@ function resizeScratch() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-/* ===================== */
-/* STATE */
-/* ===================== */
-
 let scratching = false;
 let lastX = 0;
 let lastY = 0;
 let finished = false;
 let checkCooldown = false;
 
-/* ===================== */
-/* CLICK TICKET */
-/* ===================== */
-
 ticket.addEventListener("click", () => {
 
-  // ❗ IMPORTANT : ticket ne dépend PAS de cassette/TV
-  if (ticket.dataset.done) return;
+  if (ticketDone || isBusy) return;
 
-  ticket.dataset.done = "true";
+  ticketDone = true;
 
   enterFocus();
 
-  scratchCard.style.display = "block";
   scratchCard.classList.add("active");
-
   resizeScratch();
 
-  setTimeout(() => {
-    ticket.style.opacity = "0";
-    ticket.style.pointerEvents = "none";
-  }, 150);
+  ticket.style.opacity = "0";
+  ticket.style.pointerEvents = "none";
 });
 
-/* ===================== */
 /* SCRATCH */
-/* ===================== */
-
 canvas.addEventListener("mousedown", (e) => {
   scratching = true;
 
   const rect = canvas.getBoundingClientRect();
-
   lastX = e.clientX - rect.left;
   lastY = e.clientY - rect.top;
 
@@ -235,7 +198,17 @@ canvas.addEventListener("mousemove", (e) => {
     checkCooldown = true;
 
     setTimeout(() => {
-      const percent = getScratchPercentage();
+
+      const pixels = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+
+      let transparent = 0;
+      const total = pixels.length / 4;
+
+      for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i + 3] === 0) transparent++;
+      }
+
+      const percent = (transparent / total) * 100;
 
       if (percent > 55) finishScratch();
 
@@ -243,27 +216,6 @@ canvas.addEventListener("mousemove", (e) => {
     }, 200);
   }
 });
-
-/* ===================== */
-/* PROGRESS */
-/* ===================== */
-
-function getScratchPercentage() {
-  const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-
-  let transparent = 0;
-  const total = pixels.length / 4;
-
-  for (let i = 0; i < pixels.length; i += 4) {
-    if (pixels[i + 3] === 0) transparent++;
-  }
-
-  return (transparent / total) * 100;
-}
-
-/* ===================== */
-/* FINISH */
-/* ===================== */
 
 function finishScratch() {
 
@@ -277,15 +229,23 @@ function finishScratch() {
   setTimeout(() => {
     scratchCard.style.display = "none";
     exitFocus();
+
+    ticketDone = true;
+    checkTutorialComplete();
+
   }, 600);
 }
 
-const nextPage = document.getElementById("next-page");
+/* ===================== */
+/* NEXT PAGE LOCKED */
+/* ===================== */
 
-if (nextPage) {
+nextPage.addEventListener("click", () => {
 
-  nextPage.addEventListener("click", () => {
-    window.location.href = "page2.html";
-  });
+  if (!tutorialDone) {
+    alert("Fini d'abord le tutoriel 🙂");
+    return;
+  }
 
-}
+  window.location.href = "page2.html";
+});
