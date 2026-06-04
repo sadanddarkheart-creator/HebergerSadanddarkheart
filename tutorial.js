@@ -284,20 +284,6 @@ const nextPage = document.getElementById("next-page");
 
 if (nextPage) {
 
-  window.addEventListener("scroll", () => {
-
-    const maxScroll =
-      document.documentElement.scrollHeight - window.innerHeight;
-
-    if (maxScroll <= 0) return;
-
-    const progress = window.scrollY / maxScroll;
-
-    nextPage.style.opacity =
-      Math.min(progress * 2, 1);
-
-  });
-
   nextPage.addEventListener("click", () => {
     window.location.href = "page2.html";
   });

@@ -326,14 +326,21 @@
   left: 50%;
   transform: translateX(-50%);
 
-  
+  font-size: 50px;
+  color: white;
 
-  font-size: 40px;
   cursor: pointer;
 
   animation: bounce 1.5s infinite;
 
-  z-index: 999;
+  z-index: 9999;
+
+  opacity: 0.4;
+  transition: opacity 0.5s ease;
+}
+
+#next-page:hover {
+  opacity: 1;
 }
 
 @keyframes bounce {
@@ -344,9 +351,4 @@
   50% {
     transform: translateX(-50%) translateY(10px);
   }
-}
-
-#next-page {
-  opacity: 0;
-  transition: opacity 0.5s ease;
 }
