@@ -342,7 +342,7 @@ body{
   left: 50%;
   transform: translateX(-50%);
 
-  font-size: 50px;
+font-size: clamp(40px, 10vw, 80px);
   color: white;
 
   cursor: pointer;
