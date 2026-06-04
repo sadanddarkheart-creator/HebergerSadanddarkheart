@@ -9,8 +9,9 @@ let tvDone = false;
 let ticketDone = false;
 let tutorialDone = false;
 
+
 /* ===================== */
-/* NEXT PAGE */
+/* NEXT PAGE SYSTEM */
 /* ===================== */
 
 const nextPage = document.getElementById("next-page");
@@ -20,18 +21,24 @@ function updateNextPage() {
   const maxScroll =
     document.documentElement.scrollHeight - window.innerHeight;
 
-  if (maxScroll <= 0) return;
-
-  const progress = window.scrollY / maxScroll;
+  const progress = maxScroll > 0
+    ? window.scrollY / maxScroll
+    : 1;
 
   nextPage.style.opacity = Math.min(progress * 2, 1);
 }
 
+/* events */
 window.addEventListener("scroll", updateNextPage);
 window.addEventListener("touchmove", updateNextPage);
 window.addEventListener("resize", updateNextPage);
 
+/* init */
 updateNextPage();
+
+/* ===================== */
+/* TUTORIAL CHECK */
+/* ===================== */
 
 function checkTutorialComplete() {
   if (cassetteDone && tvDone && ticketDone) {
@@ -39,10 +46,14 @@ function checkTutorialComplete() {
   }
 }
 
+/* ===================== */
+/* CLICK NEXT PAGE */
+/* ===================== */
+
 nextPage.addEventListener("click", () => {
 
   if (!tutorialDone) {
-    alert("You need to finish the tutorial first!");
+    alert("Fini d'abord le tutoriel 🙂");
     return;
   }
 
