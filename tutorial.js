@@ -9,35 +9,46 @@ let tvDone = false;
 let ticketDone = false;
 let tutorialDone = false;
 
-
 /* ===================== */
 /* NEXT PAGE SYSTEM */
 /* ===================== */
 
 const nextPage = document.getElementById("next-page");
 
-function updateNextPage() {
+/* sécurité mobile */
+if (nextPage) {
 
-  const maxScroll =
-    document.documentElement.scrollHeight - window.innerHeight;
+  function updateNextPage() {
 
-  const progress = maxScroll > 0
-    ? window.scrollY / maxScroll
-    : 1;
+    const maxScroll =
+      document.documentElement.scrollHeight - window.innerHeight;
 
-  nextPage.style.opacity = Math.min(progress * 2, 1);
+    const progress = maxScroll > 0
+      ? window.scrollY / maxScroll
+      : 1;
+
+    nextPage.style.opacity = Math.min(progress * 2, 1);
+  }
+
+  window.addEventListener("scroll", updateNextPage);
+  window.addEventListener("touchmove", updateNextPage);
+  window.addEventListener("resize", updateNextPage);
+
+  updateNextPage();
+
+  nextPage.addEventListener("click", () => {
+
+    if (!tutorialDone) {
+      alert("Fini d'abord le tutoriel 🙂");
+      return;
+    }
+
+    window.location.href = "page2.html";
+  });
 }
 
-/* events */
-window.addEventListener("scroll", updateNextPage);
-window.addEventListener("touchmove", updateNextPage);
-window.addEventListener("resize", updateNextPage);
-
-/* init */
-updateNextPage();
-
 /* ===================== */
-/* TUTORIAL CHECK */
+/* CHECK TUTORIAL */
 /* ===================== */
 
 function checkTutorialComplete() {
@@ -45,20 +56,6 @@ function checkTutorialComplete() {
     tutorialDone = true;
   }
 }
-
-/* ===================== */
-/* CLICK NEXT PAGE */
-/* ===================== */
-
-nextPage.addEventListener("click", () => {
-
-  if (!tutorialDone) {
-    alert("Fini d'abord le tutoriel 🙂");
-    return;
-  }
-
-  window.location.href = "page2.html";
-});
 
 /* ===================== */
 /* CASSETTE */
@@ -193,7 +190,7 @@ ticket.addEventListener("click", () => {
   ticket.style.pointerEvents = "none";
 });
 
-/* scratch helpers */
+/* scratch */
 
 function getPos(e) {
   const rect = canvas.getBoundingClientRect();
