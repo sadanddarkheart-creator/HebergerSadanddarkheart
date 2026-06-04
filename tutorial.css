@@ -338,25 +338,29 @@ body{
 
 #next-page {
   position: fixed;
-  bottom: 25px;
+  bottom: max(25px, env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
 
-font-size: clamp(40px, 10vw, 80px);
+  font-size: clamp(60px, 12vw, 100px);
   color: white;
+  text-shadow: 0 0 15px rgba(0,0,0,0.8);
 
   cursor: pointer;
 
   animation: bounce 1.5s infinite;
 
-  z-index: 9999;
+  z-index: 99999;
 
-  opacity: 0.4;
+  opacity: 0;
   transition: opacity 0.5s ease;
-}
 
-#next-page:hover {
-  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 120px;
+  height: 120px;
 }
 
 @keyframes bounce {
