@@ -1,0 +1,345 @@
+.scene {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+}
+
+.bg {
+  width: 100%;
+  display: block;
+  position: relative;
+  z-index: 0;
+}
+
+/* ===================== */
+/* OBJETS */
+/* ===================== */
+
+.item {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* lecteur cassette */
+#CassettePlayer {
+  width: 163px;
+  top: 67%;
+  left: 48%;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+#CassettePlayer {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+
+
+/* ===================== */
+/* TV CLIQUABLE */
+/* ===================== */
+
+#TV {
+  position: absolute;
+  top: 49%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 415px;
+
+  z-index: 5;
+
+  transition: opacity 0.3s ease;
+}
+
+#TV.hidden {
+  opacity: 0;
+  pointer-events: none;
+
+  /* 🔥 IMPORTANT : on l'envoie derrière */
+  z-index: -1;
+}
+
+/* ===================== */
+/* TV VIDEO */
+/* ===================== */
+
+
+/* WRAPPER GLOBAL */
+.tv-wrapper {
+  position: absolute;
+  top: 49%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 415px;
+
+  opacity: 0;
+  pointer-events: none;
+
+  z-index: 50;
+
+  transition: opacity 0.3s ease;
+}
+
+.tv-wrapper.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* CADRE TV (image au-dessus) */
+.tv-frame {
+  position: relative;
+  width: 100%;
+  display: block;
+  z-index: 2;
+}
+
+/* ÉCRAN (zone de clipping) */
+.tv-screen {
+  position: absolute;
+
+  top: 14%;
+  left: 1%;
+  width: 80%;
+  height: 65%;
+
+  overflow: hidden;
+
+  z-index: 1; /* sous le cadre */
+}
+
+/* VIDÉO */
+.tv-screen video {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  z-index: 0; /* tout en dessous dans l'écran */
+}
+
+/* TICKET */
+
+/* ticket */
+#ticket {
+  width: 80px;
+  top: 90%;
+  left: 50%;
+}
+
+#scratch-card {
+  display: none;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 350px;
+  height: 200px;
+
+  z-index: 50;
+}
+
+#scratch-card {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  will-change: transform, opacity;
+}
+
+#scratch-card.active {
+  display: block;
+}
+/* ===================== */
+/* CASSETTE (3D SYSTEM) */
+/* ===================== */
+
+#cassette {
+  position: absolute;
+  top: 67%;
+  left: 50%;
+
+  width: 220px;
+  height: 140px;
+
+  transform: translate(-50%, -50%) scale(0.8);
+
+  opacity: 0;
+  pointer-events: none;
+
+  z-index: 10;
+
+  transition: opacity 0.4s ease, transform 0.8s ease;
+
+  perspective: 1000px;
+}
+
+/* apparition */
+#cassette.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* INNER 3D */
+.cassette-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease;
+}
+
+/* faces */
+.front,
+.back {
+  position: absolute;
+  inset: 0;
+
+  backface-visibility: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.front img,
+.back img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* flip */
+#cassette.flipped .cassette-inner {
+  transform: rotateY(180deg);
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+/* sortie */
+#cassette.exit-up {
+  transform: translate(-50%, -150%) scale(0.7);
+  opacity: 0;
+}
+
+/* fade optionnel */
+#cassette.fade-out {
+  opacity: 0;
+  transform: translate(-50%, -120%) scale(0.7);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* 🔒 IMPORTANT : bloque clic quand cassé / animé */
+#cassette.blocked {
+  pointer-events: none;
+}
+
+
+/* ===================== */
+/* SCRATCH CARD */
+/* ===================== */
+
+#scratch-card {
+  display: none;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 350px;
+  height: 200px;
+
+  z-index: 50;
+}
+
+#scratch-card.active {
+  display: block;
+}
+
+/* contenu caché */
+.reveal {
+  position: absolute;
+  inset: 0;
+
+  z-index: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #fffdf5;
+  border-radius: 12px;
+
+  text-align: center;
+  padding: 20px;
+
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* couche à gratter */
+#scratch {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  z-index: 2;
+
+  cursor: crosshair;
+}
+
+/* texte d'aide */
+#hint {
+  position: absolute;
+  inset: 0;
+
+  z-index: 3;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 22px;
+  font-weight: bold;
+
+  color: rgba(0,0,0,0.5);
+
+  pointer-events: none;
+}
+
+#next-page {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  font-size: 40px;
+  cursor: pointer;
+
+  animation: bounce 1.5s infinite;
+
+  z-index: 999;
+}
+
+@keyframes bounce {
+  0%,100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(10px);
+  }
+}
