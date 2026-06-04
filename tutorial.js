@@ -293,3 +293,14 @@ function finishScratch() {
 
   }, 600);
 }
+
+if (nextPage) {
+
+  nextPage.addEventListener("touchstart", () => {
+    nextPage.style.transform = "translateX(-50%) scale(0.85)";
+  });
+
+  nextPage.addEventListener("touchend", () => {
+    nextPage.style.transform = "translateX(-50%) scale(1)";
+  });
+}
