@@ -350,6 +350,11 @@ body{
   transition: opacity 0.5s ease;
 }
 
+#next-page:active {
+  transform: translateX(-50%) scale(0.8);
+  transition: transform 0.1s ease;
+}
+
 #next-page img {
   width: 80px;
   height: auto;
