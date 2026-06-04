@@ -10,21 +10,44 @@ let ticketDone = false;
 let tutorialDone = false;
 
 /* ===================== */
-/* ELEMENTS PAGE NEXT */
+/* NEXT PAGE */
 /* ===================== */
 
 const nextPage = document.getElementById("next-page");
 
-/* ===================== */
-/* CHECK GLOBAL COMPLETION */
-/* ===================== */
+function updateNextPage() {
+
+  const maxScroll =
+    document.documentElement.scrollHeight - window.innerHeight;
+
+  if (maxScroll <= 0) return;
+
+  const progress = window.scrollY / maxScroll;
+
+  nextPage.style.opacity = Math.min(progress * 2, 1);
+}
+
+window.addEventListener("scroll", updateNextPage);
+window.addEventListener("touchmove", updateNextPage);
+window.addEventListener("resize", updateNextPage);
+
+updateNextPage();
 
 function checkTutorialComplete() {
   if (cassetteDone && tvDone && ticketDone) {
     tutorialDone = true;
-    nextPage.style.opacity = "1";
   }
 }
+
+nextPage.addEventListener("click", () => {
+
+  if (!tutorialDone) {
+    alert("You need to finish the tutorial first!");
+    return;
+  }
+
+  window.location.href = "page2.html";
+});
 
 /* ===================== */
 /* CASSETTE */
@@ -159,28 +182,42 @@ ticket.addEventListener("click", () => {
   ticket.style.pointerEvents = "none";
 });
 
-/* SCRATCH */
-canvas.addEventListener("mousedown", (e) => {
+/* scratch helpers */
+
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+
+  const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+
+  return { x, y };
+}
+
+canvas.addEventListener("mousedown", startScratch);
+canvas.addEventListener("touchstart", startScratch);
+
+function startScratch(e) {
   scratching = true;
 
-  const rect = canvas.getBoundingClientRect();
-  lastX = e.clientX - rect.left;
-  lastY = e.clientY - rect.top;
+  const pos = getPos(e);
+  lastX = pos.x;
+  lastY = pos.y;
 
   hint.style.opacity = "0";
-});
+}
 
 canvas.addEventListener("mouseup", () => scratching = false);
 canvas.addEventListener("mouseleave", () => scratching = false);
+canvas.addEventListener("touchend", () => scratching = false);
 
-canvas.addEventListener("mousemove", (e) => {
+canvas.addEventListener("mousemove", drawScratch);
+canvas.addEventListener("touchmove", drawScratch);
+
+function drawScratch(e) {
 
   if (!scratching || finished) return;
 
-  const rect = canvas.getBoundingClientRect();
-
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
+  const pos = getPos(e);
 
   ctx.globalCompositeOperation = "destination-out";
   ctx.lineWidth = 30;
@@ -188,18 +225,18 @@ canvas.addEventListener("mousemove", (e) => {
 
   ctx.beginPath();
   ctx.moveTo(lastX, lastY);
-  ctx.lineTo(x, y);
+  ctx.lineTo(pos.x, pos.y);
   ctx.stroke();
 
-  lastX = x;
-  lastY = y;
+  lastX = pos.x;
+  lastY = pos.y;
 
   if (!checkCooldown) {
     checkCooldown = true;
 
     setTimeout(() => {
 
-      const pixels = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+      const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
       let transparent = 0;
       const total = pixels.length / 4;
@@ -213,9 +250,10 @@ canvas.addEventListener("mousemove", (e) => {
       if (percent > 55) finishScratch();
 
       checkCooldown = false;
+
     }, 200);
   }
-});
+}
 
 function finishScratch() {
 
@@ -235,17 +273,3 @@ function finishScratch() {
 
   }, 600);
 }
-
-/* ===================== */
-/* NEXT PAGE LOCKED */
-/* ===================== */
-
-nextPage.addEventListener("click", () => {
-
-  if (!tutorialDone) {
-    alert("Fini d'abord le tutoriel 🙂");
-    return;
-  }
-
-  window.location.href = "page2.html";
-});
