@@ -15,19 +15,22 @@ let tutorialDone = false;
 
 const nextPage = document.getElementById("next-page");
 
-/* sécurité mobile */
+/* sécurité si élément absent */
 if (nextPage) {
 
   function updateNextPage() {
 
-    const maxScroll =
-      document.documentElement.scrollHeight - window.innerHeight;
+    /* IMPORTANT :
+       on NE dépend PLUS du scroll sur mobile,
+       sinon la flèche disparaît si pas assez de hauteur
+    */
 
-    const progress = maxScroll > 0
-      ? window.scrollY / maxScroll
-      : 1;
+    if (!tutorialDone) {
+      nextPage.style.opacity = 0;
+      return;
+    }
 
-    nextPage.style.opacity = Math.min(progress * 2, 1);
+    nextPage.style.opacity = 1;
   }
 
   window.addEventListener("scroll", updateNextPage);
@@ -54,6 +57,7 @@ if (nextPage) {
 function checkTutorialComplete() {
   if (cassetteDone && tvDone && ticketDone) {
     tutorialDone = true;
+    updateNextPage(); // 🔥 force affichage immédiat
   }
 }
 
@@ -190,7 +194,7 @@ ticket.addEventListener("click", () => {
   ticket.style.pointerEvents = "none";
 });
 
-/* scratch */
+/* scratch helper */
 
 function getPos(e) {
   const rect = canvas.getBoundingClientRect();
