@@ -338,29 +338,16 @@ body{
 
 #next-page {
   position: fixed;
-  bottom: max(25px, env(safe-area-inset-bottom));
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
 
-  font-size: clamp(60px, 12vw, 100px);
-  color: white;
-  text-shadow: 0 0 15px rgba(0,0,0,0.8);
+  width: 80px;
+  height: 80px;
 
-  cursor: pointer;
-
-  animation: bounce 1.5s infinite;
+  background: red;
 
   z-index: 99999;
-
-  opacity: 0;
-  transition: opacity 0.5s ease;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 120px;
-  height: 120px;
 }
 
 @keyframes bounce {
