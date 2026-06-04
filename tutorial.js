@@ -42,7 +42,7 @@ if (nextPage) {
   nextPage.addEventListener("click", () => {
 
     if (!tutorialDone) {
-      alert("Fini d'abord le tutoriel 🙂");
+      alert("You need to finish the tutorial first!");
       return;
     }
 
@@ -111,24 +111,37 @@ const video = document.getElementById("tv-video");
 
 tv.addEventListener("click", () => {
 
+  // bloque si déjà fait OU si une autre animation tourne
   if (tvDone || isBusy) return;
 
   isBusy = true;
   tvDone = true;
 
+  // cache TV clickable
   tv.style.opacity = "0";
   tv.style.pointerEvents = "none";
 
   setTimeout(() => {
 
     tv.style.display = "none";
+
     wrapper.classList.add("active");
 
-    video.currentTime = 0;
-    video.play().catch(() => {});
+    requestAnimationFrame(() => {
+      video.currentTime = 0;
+
+      const playPromise = video.play();
+
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          setTimeout(() => video.play().catch(()=>{}), 200);
+        });
+      }
+    });
 
   }, 300);
 });
+
 
 video.addEventListener("ended", () => {
 
@@ -142,6 +155,12 @@ video.addEventListener("ended", () => {
     checkTutorialComplete();
 
   }, 500);
+});
+
+
+video.addEventListener("error", () => {
+  console.log("TV ERROR: vidéo impossible à lire");
+  isBusy = false; // 🔥 important pour éviter blocage total
 });
 
 /* ===================== */
