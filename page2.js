@@ -113,26 +113,17 @@ document.addEventListener("DOMContentLoaded", () => {
 /* CASSETTE */
 /* ===================== */
 
-const cassette =
-  document.getElementById("cassette");
+document.addEventListener("DOMContentLoaded", () => {
 
-const audioContainer =
-  document.getElementById("audio-container");
+  const cassette = document.getElementById("cassette");
+  const audioContainer = document.getElementById("audio-container");
+  const audio = document.getElementById("cassette-audio");
 
-const audio =
-  document.getElementById("cassette-audio");
-
-if (
-  cassette &&
-  audioContainer &&
-  audio
-) {
+  if (!cassette || !audioContainer || !audio) return;
 
   cassette.addEventListener("click", () => {
 
-    if (
-      cassette.dataset.state === "done"
-    ) return;
+    if (cassette.dataset.state === "done") return;
 
     cassette.dataset.state = "done";
 
@@ -147,10 +138,7 @@ if (
         audioContainer.style.display = "flex";
 
         audio.play().catch(err => {
-          console.log(
-            "AUDIO ERROR:",
-            err
-          );
+          console.log("AUDIO ERROR:", err);
         });
 
       }, 500);
@@ -159,4 +147,4 @@ if (
 
   });
 
-}
+});
